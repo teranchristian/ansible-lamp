@@ -1,0 +1,9 @@
+- hosts: devct
+  sudo: yes
+  vars_files:
+    - vars/all.yml
+  roles:
+    - server
+    - webserver
+    - composer
+    - mariadb

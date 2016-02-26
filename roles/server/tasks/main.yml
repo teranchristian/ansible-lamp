@@ -1,0 +1,4 @@
+  - name: set up rvm
+    action: apt state=present pkg={{ item }}
+    with_items:
+      - curl

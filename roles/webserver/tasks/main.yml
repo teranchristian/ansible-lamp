@@ -1,0 +1,50 @@
+---
+- name: install apache
+  sudo: yes
+  apt: name=apache2 update_cache=yes state=present
+
+- name: Install Apache Modules
+  apache2_module: state=present name={{ item }}
+  notify: restart apache
+  with_items:
+    - rewrite
+    - vhost_alias
+    - headers
+    - expires
+    - filter
+
+- name: install php module for Apache
+  apt: name=libapache2-mod-php5 state=present
+
+- name: start Apache
+  apt: name=apache2
+
+- name: install packages
+  apt: name={{ item }} update_cache=yes state=latest
+  with_items:
+    - php5-cli
+    - php5
+    - php5-mysql
+
+- name: Disable default apache site
+  file:
+    path: "/etc/apache2/sites-enabled/000-default"
+    state: absent
+  notify: Restart apache
+
+- name: Change default apache2.4 site
+  sudo: yes
+  template: src=vhost.conf.tpl dest=/etc/apache2/sites-available/000-default.conf
+  notify: restart apache
+
+- name: display php errors when not in production
+  ini_file: dest=/etc/php5/apache2/php.ini
+            section=PHP
+            option=display_errors
+            value=On
+  notify: restart apache
+
+- name: 4. install Hello World PHP script
+  copy: src=index.php dest=/var/www/index.php mode=0664
+
+

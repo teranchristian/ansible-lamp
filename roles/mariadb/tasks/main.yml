@@ -1,0 +1,71 @@
+---
+# Retrieve the current hostname, because {{ ansible_hostname }} still contains the old name
+- shell: hostname
+  register: current_hostname
+
+- name: Add MariaDB-Repository
+  sudo: yes
+  apt_repository: repo='deb http://mirror3.layerjet.com/mariadb/repo/10.1/ubuntu {{ ansible_distribution_release }} main' state=present
+
+- name: Add Key for MariaDB Repository
+  sudo: yes
+  apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xcbcb082a1bb943db
+
+- name: Update apt
+  sudo: yes
+  apt: update_cache=yes
+
+- name: mariadb | Install MariaDB Packages
+  sudo: yes
+  apt: pkg={{ item }} state=latest
+  with_items:
+    - mariadb-server
+    - python-mysqldb
+
+- name: mariadb | Update root password for all root accounts
+  mysql_user: name=root host={{ item }} check_implicit_admin=yes password={{ mariadb.root_password }} login_user=root login_password={{ mariadb.root_password }}
+  with_items:
+    - "{{ current_hostname.stdout | lower }}"
+    - 127.0.0.1
+    - ::1
+    - localhost
+
+- name: mariadb | Ensure anonymous users are not in the database
+  mysql_user: name='' host={{ item }} state=absent login_user=root login_password={{ mariadb.root_password }}
+  with_items:
+    - localhost
+    - "{{ current_hostname.stdout | lower }}"
+
+- name: mariadb | Create databases
+  mysql_db: name={{ mariadb.database }} state=present login_user=root login_password={{ mariadb.root_password }}
+
+
+- name: mariadb | Create users
+  mysql_user: name={{ mariadb.user }} password={{ mariadb.password }} priv={{ mariadb.database }}.*:ALL state=present login_user=root login_password={{ mariadb.root_password }}
+
+  # phpmyadmin
+
+- name: install phpmyadmin
+  apt: name=phpmyadmin state=latest
+
+- name: Add default username and password for MySQL connection.
+  lineinfile: >
+    dest=/etc/phpmyadmin/config.inc.php
+    state=present
+    regexp="^.+\['{{ item.key }}'\].+$"
+    line="$cfg['Servers'][$i]['{{ item.key }}'] = '{{ item.value }}';"
+    insertbefore="^\?>"
+  with_items:
+  - { key: host, value: "{{ phpmyadmin.host }}" }
+  - { key: port, value: "{{ phpmyadmin.port }}" }
+  - { key: socket, value: "{{ phpmyadmin.socket }}" }
+  - { key: connect_type, value: "{{ phpmyadmin.connect_type }}" }
+  - { key: user, value: "{{ phpmyadmin.user }}" }
+  - { key: password, value: "{{ phpmyadmin.password }}"}
+  - { key: auth_type, value: "{{ phpmyadmin.auth_type }}" }
+
+- name: ensure phpmyadmin installed
+  command: ln -s /etc/phpmyadmin/apache.conf /etc/apache2/conf-enabled/phpmyadmin.conf creates=/etc/apache2/conf-enabled/phpmyadmin.conf
+
+- name: ensure phpmyadmin site reloaded
+  service: name=apache2 state=restarted
