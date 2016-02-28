@@ -4,19 +4,23 @@
   register: current_hostname
 
 - name: Add MariaDB-Repository
-  sudo: yes
+  become: yes
+  become_method: sudo
   apt_repository: repo='deb http://mirror3.layerjet.com/mariadb/repo/10.1/ubuntu {{ ansible_distribution_release }} main' state=present
 
 - name: Add Key for MariaDB Repository
-  sudo: yes
+  become: yes
+  become_method: sudo
   apt_key: url=http://keyserver.ubuntu.com/pks/lookup?op=get&search=0xcbcb082a1bb943db
 
 - name: Update apt
-  sudo: yes
+  become: yes
+  become_method: sudo
   apt: update_cache=yes
 
 - name: mariadb | Install MariaDB Packages
-  sudo: yes
+  become: yes
+  become_method: sudo
   apt: pkg={{ item }} state=latest
   with_items:
     - mariadb-server
