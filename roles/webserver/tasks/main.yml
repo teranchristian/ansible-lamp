@@ -49,6 +49,20 @@
   notify: restart apache
 
 - name: 4. install Hello World PHP script
-  copy: src=index.php dest=/var/www/index.php mode=0664
+  copy: src=index.php dest=/var/www/pub/index.php mode=0664
 
+- name: node.js | Make sure the ansible required dependencies are installed
+  apt:
+    pkg: python-pycurl
+    state: present
 
+- name: 5. install node.js | Fetching node.js source
+  shell: curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
+
+- name: install nodejs packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+   - nodejs 
+
+- name: restart networking
+  service: name=networking state=restarted

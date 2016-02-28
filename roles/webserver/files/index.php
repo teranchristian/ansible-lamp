@@ -1,2 +1,2 @@
 <?php
- echo "welcome christian":
+ echo "welcome christian";
