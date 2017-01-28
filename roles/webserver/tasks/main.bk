@@ -28,8 +28,6 @@
     - php5-cli
     - php5
     - php5-mysql
-    - php5-curl
-    - php5-intl
 
 - name: Disable default apache site
   file:
@@ -50,11 +48,26 @@
             value=On
   notify: restart apache
 
-- name: Creates PUB directory
-  file: path=/var/www/pub/ state=directory
-
 - name: 4. install Hello World PHP script
   copy: src=index.php dest=/var/www/pub/index.php mode=0664
+
+- name: node.js | Make sure the ansible required dependencies are installed
+  apt:
+    pkg: python-pycurl
+    state: present
+    
+- name: 5. install node.js | Fetching node.js source
+  shell: curl -sL https://deb.nodesource.com/setup_4.x | sudo bash -
+
+- name: install nodejs packages
+  apt: pkg={{ item }} state=latest
+  with_items:
+   - nodejs
+
+- name: NPM Install global packages
+  npm: name={{item}} global=yes
+  with_items: nodejs_global_packages
+  tags: nodejs  
 
 - name: restart networking
   service: name=networking state=restarted

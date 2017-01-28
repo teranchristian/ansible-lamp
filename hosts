@@ -1,2 +1,5 @@
-[devct]
-192.168.56.20 ansible_ssh_user=devct
+[ct]
+192.168.56.101 ansible_ssh_user=ct
+
+[ec2]
+192.168.56.102 ansible_ssh_user=ec2
