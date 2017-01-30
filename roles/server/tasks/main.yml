@@ -20,3 +20,19 @@
 - name: Set default system language pack
   shell: locale-gen {{server.locale}}
   sudo: yes
+
+- name: Adding existing user '{{ user }}' to vboxsf
+  user: name='{{ server.user }}' groups=vboxsf append=yes
+  when: environment  == "development"
+
+- name: ownership and automatically mount in virtualbox via vboxsf
+  lineinfile: dest=/etc/rc.local
+              insertbefore='exit 0'
+              line='mount -t vboxsf -o uid=1000,gid=33,dmode=775 www /var/www'
+              state=present
+  when: environment  == "development"
+
+- name: Install virtualbox-guest-dkms
+  sudo: yes
+  apt: pkg=virtualbox-guest-dkms state=latest
+  when: environment  == "development"
