@@ -6,13 +6,8 @@
 
 - name: Install Apache Modules
   apache2_module: state=present name={{ item }}
+  with_items: apache.module
   notify: restart apache
-  with_items:
-    - rewrite
-    - vhost_alias
-    - headers
-    - expires
-    - filter
 
 - name: install php module for Apache
   become: yes
@@ -22,14 +17,12 @@
 - name: start Apache
   apt: name=apache2
 
-- name: install packages
-  apt: name={{ item }} update_cache=yes state=latest
-  with_items:
-    - php5-cli
-    - php5
-    - php5-mysql
-    - php5-curl
-    - php5-intl
+- name: Install PHP Packages
+  sudo: yes
+  apt: pkg={{ item }} update_cache=yes state=latest
+  with_items: php.packages
+  when: php.packages is defined
+
 
 - name: Disable default apache site
   file:

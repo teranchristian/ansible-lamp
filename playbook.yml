@@ -1,10 +1,12 @@
-- hosts: '{{ target }}'
+- hosts: '{{target}}'
   become: yes
   become_method: sudo
   vars_files:
-    - vars/all.yml
+    - environments/{{target}}/vars/web.yml
+    - environments/{{target}}/vars/db.yml
   roles:
     - server
     - webserver
     - composer
     - mariadb
+

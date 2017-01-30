@@ -1,6 +1,3 @@
 # ansible-lamp
 lamp
-asdasd
-
-
-sudo apt-get install php5-intl
+run `ansible-playbook --ask-su-pass  playbook.yml --extra-vars "target=dev"`

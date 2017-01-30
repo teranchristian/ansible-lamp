@@ -1,0 +1,16 @@
+---
+mariadb:
+    install: '1'
+    root_password: root
+    database: db
+    user: devct
+    password: qwerty
+    dump: ''
+phpmyadmin:
+    host: localhost
+    port: ''
+    socket: ''
+    connect_type: tcp
+    user: root
+    password: root
+    auth_type: config
