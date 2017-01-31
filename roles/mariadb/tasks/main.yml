@@ -43,12 +43,20 @@
 - name: mariadb | Create databases
   mysql_db: name={{ mariadb.database }} state=present login_user=root login_password={{ mariadb.root_password }}
 
-
 - name: mariadb | Create users
   mysql_user: name={{ mariadb.user }} password={{ mariadb.password }}  priv=*.*:ALL state=present login_user=root login_password={{ mariadb.root_password }}
 
-  # phpmyadmin
+#El dato DB
+- name: Create database El DATO
+  mysql_db: db=eldato state=present login_user='devct' login_password='qwerty'
 
+- name: Copy El Dato (structure) SQL to tmp
+  copy: src=eldato.sql dest=/tmp
+
+- name: Import El Dato structure
+  mysql_db: name=eldato login_user='devct' login_password='qwerty' state=import target=/tmp/eldato.sql
+
+# phpmyadmin
 - name: install phpmyadmin
   apt: name=phpmyadmin state=latest
 
