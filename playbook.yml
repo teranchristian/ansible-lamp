@@ -2,6 +2,7 @@
   become: yes
   become_method: sudo
   vars_files:
+    - environments/{{target}}/vars/all.yml
     - environments/{{target}}/vars/web.yml
     - environments/{{target}}/vars/db.yml
   roles:

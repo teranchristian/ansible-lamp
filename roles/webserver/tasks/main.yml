@@ -43,9 +43,6 @@
             value=On
   notify: restart apache
 
-- name: Creates PUB directory
-  file: path=/var/www/pub/ state=directory
-
 - name: 4. install Hello World PHP script
   copy: src=index.php dest=/var/www/pub/index.php mode=0664
 

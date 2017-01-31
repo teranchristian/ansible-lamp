@@ -5,6 +5,7 @@ server:
     locale: en_GB.UTF-8
     packages: [curl, wget, vim]
     user: ec2
+    environment: development
 vagrant_local:
     install: '1'
     vm: { base_box: trusty64, hostname: localhost, ip: 192.168.0.10, memory: '512', sharedfolder: ./var/www, useVagrantCloud: '1', syncType: nfs }

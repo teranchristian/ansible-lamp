@@ -21,18 +21,21 @@
   shell: locale-gen {{server.locale}}
   sudo: yes
 
+- name: Creates PUB directory
+  file: path=/var/www/pub/ state=directory
+
 - name: Adding existing user '{{ user }}' to vboxsf
   user: name='{{ server.user }}' groups=vboxsf append=yes
-  when: environment  == "development"
+  when: server.environment  == "development"
 
 - name: ownership and automatically mount in virtualbox via vboxsf
   lineinfile: dest=/etc/rc.local
               insertbefore='exit 0'
               line='mount -t vboxsf -o uid=1000,gid=33,dmode=775 www /var/www'
               state=present
-  when: environment  == "development"
+  when: server.environment  == "development"
 
 - name: Install virtualbox-guest-dkms
   sudo: yes
   apt: pkg=virtualbox-guest-dkms state=latest
-  when: environment  == "development"
+  when: server.environment  == "development"
