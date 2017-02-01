@@ -39,3 +39,13 @@
   sudo: yes
   apt: pkg=virtualbox-guest-dkms state=latest
   when: server.environment  == "development"
+
+# Copy a new interfaces file into /etc/network/interfaces
+- copy:
+    src: interfaces
+    dest: /etc/network/interfaces
+    owner: root
+    group: root
+    mode: 0644
+    backup: yes
+    when: server.environment  == "development"
