@@ -6,8 +6,8 @@
     - environments/{{target}}/vars/web.yml
     - environments/{{target}}/vars/db.yml
   roles:
-    # - server
-    # - webserver
-    # - composer
+    - server
+    - webserver
+    - composer
     - mariadb
 

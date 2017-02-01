@@ -25,6 +25,25 @@ CREATE TABLE IF NOT EXISTS `category` (
   `status` varchar(20) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--
+-- Dumping data for table `category`
+--
+
+INSERT INTO `category` (`id`, `name`, `slug`, `status`) VALUES
+(1, 'Autos & Motores', 'autos-y-motores', '1'),
+(2, 'Libros & Revistas', 'libros-y-revistas', '1'),
+(3, 'Computadores & Tables', 'computadores-y-tables', '1'),
+(4, 'Telefonía', 'telefonia', '1'),
+(5, 'Discotecas & Bares', 'discotecas-y-bares', '1'),
+(6, 'Restaurantes', 'restaurantes', '1'),
+(7, 'Servicios', 'servicios', '1'),
+(8, 'Educación', 'educacion', '1'),
+(9, 'Electrónica, Audio & Video', 'electrónica-audio-y-video', '1'),
+(10, 'Entretenimiento', 'entretenimiento', '1'),
+(11, 'Moda', 'moda', '1'),
+(12, 'video-juegos', 'video-juegos', '1'),
+(13, 'Otras categorías', 'otras-categorias', '1');
+
 CREATE TABLE IF NOT EXISTS `Comment` (
   `id` int(11) NOT NULL,
   `entity` char(10) COLLATE utf8_unicode_ci NOT NULL,
