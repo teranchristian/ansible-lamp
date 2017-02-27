@@ -2,10 +2,8 @@
 auto lo
 iface lo inet loopback
 
+auto enp0s3
+
 auto enp0s8
 iface enp0s8 inet static
         address 192.168.56.102
-        netmask 255.255.255.0
-        network 192.168.56.0
-        broadcast 192.168.56.255
-        gateway 192.168.56.1

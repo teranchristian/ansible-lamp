@@ -2,4 +2,4 @@
 192.168.56.102 ansible_ssh_user=ec2
 
 [ec2]
-192.168.56.1021 ansible_ssh_user=ec2
+192.168.56.102 ansible_ssh_user=ec2
